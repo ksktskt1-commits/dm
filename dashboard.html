@@ -493,6 +493,14 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
             const expiryDate = document.getElementById('userExpiryDate').value;
             const licenseKey = document.getElementById('licenseKey').value;
             
+            // Debug: Log the values being sent
+            console.log('Creating user with:', {
+                username: username,
+                password: password,
+                expiry: new Date(expiryDate).toISOString(),
+                licenseKey: licenseKey
+            });
+            
             try {
                 const response = await fetch(`${API_BASE}/create_user`, {
                     method: 'POST',
@@ -512,11 +520,13 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
                     document.getElementById('createUserForm').reset();
                     loadUsers();
                 } else {
-                    alert('Error creating user');
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    alert(`Error creating user: ${errorData.error || errorData.message || 'Unknown error'}`);
                 }
             } catch (error) {
-                console.error('Error creating user:', error);
-                alert('Error creating user');
+                console.error('Network Error:', error);
+                alert(`Network error: ${error.message}`);
             }
         });
 

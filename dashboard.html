@@ -125,10 +125,6 @@
                             <label class="block text-sm font-medium mb-2">Expiry Date</label>
                             <input type="datetime-local" id="userExpiryDate" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white">
                             </div>
-                            <div>
-                            <label class="block text-sm font-medium mb-2">License Key</label>
-                            <input type="text" id="licenseKey" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white" placeholder="Enter license key">
-                            </div>
                         <div class="md:col-span-2">
                             <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">
                                 <i class="ri-user-add-line mr-2"></i>Create User
@@ -491,14 +487,12 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const expiryDate = document.getElementById('userExpiryDate').value;
-            const licenseKey = document.getElementById('licenseKey').value;
             
             // Debug: Log the values being sent
             console.log('Creating user with:', {
                 username: username,
                 password: password,
-                expiry: new Date(expiryDate).toISOString(),
-                licenseKey: licenseKey
+                expiry: new Date(expiryDate).toISOString()
             });
             
             try {
@@ -510,8 +504,7 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
                     body: JSON.stringify({
                         username: username,
                         password: password,
-                        expiry: new Date(expiryDate).toISOString(),
-                        licenseKey: licenseKey
+                        expiry: new Date(expiryDate).toISOString()
                     })
                 });
                 

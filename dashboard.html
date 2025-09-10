@@ -157,11 +157,11 @@
                                 <i class="ri-file-copy-line mr-1"></i>Copy
                             </button>
                         </div>
-                        <pre id="csharp-code" class="text-green-400 text-sm overflow-x-auto"><code>// Initialize KeyAuth API
+                                <pre id="csharp-code" class="text-green-400 text-sm overflow-x-auto"><code>// Initialize KeyAuth API
 public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
-    name: "EXM",                    // App name - USER CAN CHANGE THIS
+    name: "",                    // App name - USER CAN CHANGE THIS
     ownerid: "X3lapZ9vPT",         // Account ID - USER CAN CHANGE THIS  
-    version: "1.5"                 // Application version - USER CAN CHANGE THIS
+    version: "1.0"                 // Application version - USER CAN CHANGE THIS
 );</code></pre>
                     </div>
 
@@ -251,9 +251,9 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
                                 </div>
                                 <pre id="updatedCode" class="text-green-400 text-sm overflow-x-auto"><code>// Initialize KeyAuth API
 public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
-    name: "EXM",                    // App name
+    name: "",                    // App name
     ownerid: "X3lapZ9vPT",         // Account ID  
-    version: "1.5"                 // Application version
+    version: "1.0"                 // Application version
 );</code></pre>
                             </div>
                         </div>
@@ -342,6 +342,21 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
                 console.error('Failed to copy: ', err);
                 alert('Failed to copy to clipboard');
             });
+        }
+
+        // Update C# code in API Credentials section
+        function updateApiCredentialsCode() {
+            const appName = document.getElementById('appName').value;
+            const ownerId = document.getElementById('ownerId').value;
+            const version = document.getElementById('version').value;
+            
+            const codeElement = document.getElementById('csharp-code');
+            codeElement.innerHTML = `<code>// Initialize KeyAuth API
+public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
+    name: "${appName}",                    // App name - USER CAN CHANGE THIS
+    ownerid: "${ownerId}",         // Account ID - USER CAN CHANGE THIS  
+    version: "${version}"                 // Application version - USER CAN CHANGE THIS
+);</code>`;
         }
 
         // Logout function
@@ -642,6 +657,7 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
             }
             
             updateCodePreview();
+            updateApiCredentialsCode();
         }
 
         // Settings form submission

@@ -311,6 +311,10 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
                 
                 // Load settings after authentication is confirmed
                 loadSettings();
+                // Also update API credentials code
+                setTimeout(() => {
+                    updateApiCredentialsCode();
+                }, 100);
             }
         });
 
@@ -323,6 +327,13 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
             
             // Show selected section
             document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            // Update API credentials code when switching to API credentials tab
+            if (sectionName === 'api-credentials') {
+                setTimeout(() => {
+                    updateApiCredentialsCode();
+                }, 50);
+            }
         }
 
         // Copy to clipboard function
@@ -350,13 +361,20 @@ public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
             const ownerId = document.getElementById('ownerId').value;
             const version = document.getElementById('version').value;
             
+            console.log('Updating API credentials code with:', { appName, ownerId, version });
+            
             const codeElement = document.getElementById('csharp-code');
-            codeElement.innerHTML = `<code>// Initialize KeyAuth API
+            if (codeElement) {
+                codeElement.innerHTML = `<code>// Initialize KeyAuth API
 public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
     name: "${appName}",                    // App name - USER CAN CHANGE THIS
     ownerid: "${ownerId}",         // Account ID - USER CAN CHANGE THIS  
     version: "${version}"                 // Application version - USER CAN CHANGE THIS
 );</code>`;
+                console.log('API credentials code updated successfully');
+            } else {
+                console.error('csharp-code element not found');
+            }
         }
 
         // Logout function

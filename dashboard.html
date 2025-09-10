@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#09090d] text-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Auth Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#09090d',
+                        'dark-card': '#0f0f17',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark-bg">
+    <!-- Navigation -->
+    <nav class="bg-dark-card border-b border-gray-700">
+        <div class="px-4 py-3">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold text-white">Private Auth</h1>
+                <button onclick="logout()" class="text-gray-400 hover:text-white">
+                    <i class="ri-logout-box-line"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-dark-card h-screen border-r border-gray-700">
+            <div class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#licenses" onclick="showSection('licenses')" 
+                           class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white">
+                            <i class="ri-key-2-fill mr-3"></i>
+                    Licenses
+                </a>
+                    </li>
+                    <li>
+                        <a href="#users" onclick="showSection('users')" 
+                           class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white">
+                            <i class="ri-group-line mr-3"></i>
+                    Users
+                </a>
+                    </li>
+                    <li>
+                        <a href="#api-credentials" onclick="showSection('api-credentials')" 
+                           class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white">
+                            <i class="ri-code-s-slash-line mr-3"></i>
+                            API Credentials
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" onclick="showSection('settings')" 
+                           class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-blue-700 hover:text-white">
+                            <i class="ri-settings-3-line mr-3"></i>
+                    Settings
+                </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Licenses Section -->
+            <div id="licenses-section" class="section">
+                <h2 class="text-2xl font-bold mb-4">Licenses</h2>
+                
+                <!-- Create License Form -->
+                <div class="bg-dark-card p-6 rounded-lg border border-gray-700 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Create License</h3>
+                    <form id="createLicenseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                            <label class="block text-sm font-medium mb-2">License Key</label>
+                            <input type="text" id="licenseKey" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white" placeholder="Enter license key">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Expiry Date</label>
+                            <input type="datetime-local" id="expiryDate" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white">
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+                                <i class="ri-add-line mr-2"></i>Create License
+                        </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Licenses List -->
+                <div class="bg-dark-card p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold mb-4">Existing Licenses</h3>
+                    <div id="licensesList" class="space-y-2">
+                        <!-- Licenses will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="users-section" class="section hidden">
+                <h2 class="text-2xl font-bold mb-4">Users</h2>
+                
+                <!-- Create User Form -->
+                <div class="bg-dark-card p-6 rounded-lg border border-gray-700 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Create User</h3>
+                    <form id="createUserForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                            <label class="block text-sm font-medium mb-2">Username</label>
+                            <input type="text" id="username" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white" placeholder="Enter username">
+                            </div>
+                            <div>
+                            <label class="block text-sm font-medium mb-2">Password</label>
+                            <input type="password" id="password" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white" placeholder="Enter password">
+                        </div>
+                            <div>
+                            <label class="block text-sm font-medium mb-2">Expiry Date</label>
+                            <input type="datetime-local" id="userExpiryDate" class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white">
+                            </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">
+                                <i class="ri-user-add-line mr-2"></i>Create User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Users List -->
+                <div class="bg-dark-card p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold mb-4">Existing Users</h3>
+                    <div id="usersList" class="space-y-2">
+                        <!-- Users will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Credentials Section -->
+            <div id="api-credentials-section" class="section hidden">
+                <h2 class="text-2xl font-bold mb-4">API Credentials</h2>
+                
+                <div class="bg-dark-card p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold mb-4">C# Integration Code</h3>
+                    
+                    <!-- C# Code -->
+                    <div class="bg-gray-900 p-4 rounded-lg mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-400">Copy this code to your C# application</span>
+                            <button onclick="copyToClipboard('csharp-code')" class="text-blue-400 hover:text-blue-300 text-sm">
+                                <i class="ri-file-copy-line mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <pre id="csharp-code" class="text-green-400 text-sm overflow-x-auto"><code>// Initialize KeyAuth API
+public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
+    name: "EXM",                    // App name - USER CAN CHANGE THIS
+    ownerid: "X3lapZ9vPT",         // Account ID - USER CAN CHANGE THIS  
+    version: "1.5"                 // Application version - USER CAN CHANGE THIS
+);</code></pre>
+                    </div>
+
+                    <!-- API Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-white font-semibold mb-2">API Server URL</h4>
+                            <div class="flex items-center">
+                                <input type="text" id="apiUrl" value="https://api-s736.onrender.com/api" readonly 
+                                    class="flex-1 bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm">
+                                <button onclick="copyToClipboard('apiUrl')" class="ml-2 text-blue-400 hover:text-blue-300">
+                                    <i class="ri-file-copy-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-white font-semibold mb-2">App Name</h4>
+                            <div class="flex items-center">
+                                <input type="text" id="appName" value="" readonly 
+                                    class="flex-1 bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm">
+                                <button onclick="copyToClipboard('appName')" class="ml-2 text-blue-400 hover:text-blue-300">
+                                    <i class="ri-file-copy-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-white font-semibold mb-2">Owner ID</h4>
+                            <div class="flex items-center">
+                                <input type="text" id="ownerId" value="X3lapZ9vPT" readonly 
+                                    class="flex-1 bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm">
+                                <button onclick="copyToClipboard('ownerId')" class="ml-2 text-blue-400 hover:text-blue-300">
+                                    <i class="ri-file-copy-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-white font-semibold mb-2">Version</h4>
+                            <div class="flex items-center">
+                                <input type="text" id="version" value="1.0" readonly 
+                                    class="flex-1 bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 text-sm">
+                                <button onclick="copyToClipboard('version')" class="ml-2 text-blue-400 hover:text-blue-300">
+                                    <i class="ri-file-copy-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="section hidden">
+                <h2 class="text-2xl font-bold mb-4">Settings</h2>
+                
+                <div class="bg-dark-card p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-semibold mb-4">Application Configuration</h3>
+                    
+                    <form id="settingsForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">App Version</label>
+                                <input type="text" id="settingsVersion" value="1.0" 
+                                    class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white" 
+                                    placeholder="Enter version (e.g., 1.0)">
+                                <p class="text-xs text-gray-400 mt-1">Version for automatic updates</p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium mb-2">API Server URL</label>
+                                <input type="url" id="settingsApiUrl" value="https://api-s736.onrender.com/api" 
+                                    class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white" 
+                                    placeholder="Enter API server URL">
+                                <p class="text-xs text-gray-400 mt-1">Your deployed API server endpoint</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-700 pt-6">
+                            <h4 class="text-md font-semibold mb-4">Preview C# Code</h4>
+                            <div class="bg-gray-900 p-4 rounded-lg">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm text-gray-400">Updated integration code</span>
+                                    <button type="button" onclick="copyUpdatedCode()" class="text-blue-400 hover:text-blue-300 text-sm">
+                                        <i class="ri-file-copy-line mr-1"></i>Copy Updated Code
+                                    </button>
+                                </div>
+                                <pre id="updatedCode" class="text-green-400 text-sm overflow-x-auto"><code>// Initialize KeyAuth API
+public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
+    name: "EXM",                    // App name
+    ownerid: "X3lapZ9vPT",         // Account ID  
+    version: "1.5"                 // Application version
+);</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" onclick="resetSettings()" 
+                                class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">
+                                <i class="ri-refresh-line mr-2"></i>Reset to Default
+                            </button>
+                            <button type="submit" 
+                                class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                                <i class="ri-save-line mr-2"></i>Save Settings
+                            </button>
+                        </div>
+                    </form>
+            </div>
+        </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        const API_BASE = 'https://api-s736.onrender.com/api';
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAN-l7ZRCMw8opvJWCZJAFXI5SM8k0vNs",
+            authDomain: "our-auth-165db.firebaseapp.com",
+            databaseURL: "https://our-auth-165db-default-rtdb.firebaseio.com",
+            projectId: "our-auth-165db",
+            storageBucket: "our-auth-165db.firebasestorage.app",
+            messagingSenderId: "1064730108871",
+            appId: "1:1064730108871:web:e3347d3ec217431f35efe2",
+            measurementId: "G-KG1EEXQF51"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Check authentication status
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                // User is not authenticated, redirect to login
+                console.log('User not authenticated, redirecting to login');
+                window.location.href = 'inbex.html';
+            } else {
+                console.log('User authenticated:', user.email);
+                // Clear any session flags
+                sessionStorage.removeItem('explicitLogin');
+                sessionStorage.removeItem('explicitRegister');
+                
+                // Load settings after authentication is confirmed
+                loadSettings();
+            }
+        });
+
+        // Show section function
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+        }
+
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            let textToCopy;
+            
+            if (elementId === 'csharp-code') {
+                textToCopy = element.textContent;
+            } else {
+                textToCopy = element.value;
+            }
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut().then(() => {
+                    console.log('User signed out successfully');
+                    // Clear session storage
+                    sessionStorage.clear();
+                    window.location.href = 'inbex.html';
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                    alert('Logout failed: ' + error.message);
+                });
+            }
+        }
+
+        // Load licenses
+        async function loadLicenses() {
+            try {
+                const response = await fetch(`${API_BASE}/get_licenses`);
+                const licenses = await response.json();
+                
+                const licensesList = document.getElementById('licensesList');
+                licensesList.innerHTML = '';
+                
+                licenses.forEach(license => {
+                    const licenseDiv = document.createElement('div');
+                    licenseDiv.className = 'bg-gray-800 p-3 rounded-lg border border-gray-600';
+                    licenseDiv.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">${license.key}</span>
+                                <span class="text-gray-400 ml-2">Expires: ${new Date(license.expiry).toLocaleString()}</span>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs ${license.used ? 'bg-red-600' : 'bg-green-600'}">${license.used ? 'Used' : 'Available'}</span>
+                        </div>
+                    `;
+                    licensesList.appendChild(licenseDiv);
+                });
+            } catch (error) {
+                console.error('Error loading licenses:', error);
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE}/get_users`);
+                const users = await response.json();
+                
+                const usersList = document.getElementById('usersList');
+                usersList.innerHTML = '';
+                
+                users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'bg-gray-800 p-3 rounded-lg border border-gray-600';
+                    userDiv.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">${user.username}</span>
+                                <span class="text-gray-400 ml-2">Expires: ${new Date(user.expiry).toLocaleString()}</span>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs bg-blue-600">Active</span>
+                        </div>
+                    `;
+                    usersList.appendChild(userDiv);
+                });
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Create license
+        document.getElementById('createLicenseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const licenseKey = document.getElementById('licenseKey').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/create_license`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        key: licenseKey,
+                        expiry: new Date(expiryDate).toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('License created successfully!');
+                    document.getElementById('createLicenseForm').reset();
+                    loadLicenses();
+                } else {
+                    alert('Error creating license');
+                }
+            } catch (error) {
+                console.error('Error creating license:', error);
+                alert('Error creating license');
+            }
+        });
+
+        // Create user
+        document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const expiryDate = document.getElementById('userExpiryDate').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/create_user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        expiry: new Date(expiryDate).toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('User created successfully!');
+                    document.getElementById('createUserForm').reset();
+                    loadUsers();
+                } else {
+                    alert('Error creating user');
+                }
+            } catch (error) {
+                console.error('Error creating user:', error);
+                alert('Error creating user');
+            }
+        });
+
+        // Settings functions
+        function updateCodePreview() {
+            const version = document.getElementById('settingsVersion').value;
+            
+            // Get appName and ownerId from localStorage or use defaults
+            const savedSettings = localStorage.getItem('privateAuthSettings');
+            let appName = 'EXM';
+            let ownerId = 'X3lapZ9vPT';
+            
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                appName = settings.appName || 'EXM';
+                ownerId = settings.ownerId || 'X3lapZ9vPT';
+            }
+            
+            const codeElement = document.getElementById('updatedCode');
+            codeElement.innerHTML = `<code>// Initialize KeyAuth API
+public static KeyAuthAPI KeyAuthApp = new KeyAuthAPI(
+    name: "${appName}",                    // App name
+    ownerid: "${ownerId}",         // Account ID  
+    version: "${version}"                 // Application version
+);</code>`;
+        }
+
+        function copyUpdatedCode() {
+            const codeElement = document.getElementById('updatedCode');
+            const textToCopy = codeElement.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Updated code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+
+
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to default values?')) {
+                // Generate new app name from current user's email
+                const user = auth.currentUser;
+                let generatedAppName = 'EXM';
+                
+                if (user && user.email) {
+                    generatedAppName = generateAppNameFromEmail(user.email);
+                }
+                
+                document.getElementById('settingsVersion').value = '1.0';
+                document.getElementById('settingsApiUrl').value = 'https://api-s736.onrender.com/api';
+                
+                // Update API credentials section
+                document.getElementById('appName').value = generatedAppName;
+                document.getElementById('ownerId').value = 'X3lapZ9vPT';
+                document.getElementById('version').value = '1.0';
+                document.getElementById('apiUrl').value = 'https://api-s736.onrender.com/api';
+                
+                updateCodePreview();
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                version: document.getElementById('settingsVersion').value,
+                apiUrl: document.getElementById('settingsApiUrl').value
+            };
+            
+            // Get existing settings to preserve appName and ownerId
+            const existingSettings = localStorage.getItem('privateAuthSettings');
+            if (existingSettings) {
+                const existing = JSON.parse(existingSettings);
+                settings.appName = existing.appName || 'EXM';
+                settings.ownerId = existing.ownerId || 'X3lapZ9vPT';
+            } else {
+                settings.appName = 'EXM';
+                settings.ownerId = 'X3lapZ9vPT';
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('privateAuthSettings', JSON.stringify(settings));
+            
+            // Update API credentials section
+            document.getElementById('appName').value = settings.appName;
+            document.getElementById('ownerId').value = settings.ownerId;
+            document.getElementById('version').value = settings.version;
+            document.getElementById('apiUrl').value = settings.apiUrl;
+            
+            alert('Settings saved successfully!');
+        }
+
+        function generateAppNameFromEmail(email) {
+            // Extract username part before @
+            const username = email.split('@')[0];
+            
+            // Split by common separators and filter out empty strings
+            const words = username.split(/[._-]/).filter(word => word.length > 0);
+            
+            // Take at least 3 words, or pad with default words if not enough
+            let appNameWords = [];
+            
+            if (words.length >= 3) {
+                appNameWords = words.slice(0, 3);
+            } else {
+                // Use available words + pad with default words
+                appNameWords = [...words];
+                const defaultWords = ['Auth', 'Secure', 'Private', 'Key', 'Lock', 'Guard', 'Shield', 'Vault'];
+                
+                while (appNameWords.length < 3) {
+                    const randomWord = defaultWords[Math.floor(Math.random() * defaultWords.length)];
+                    if (!appNameWords.includes(randomWord)) {
+                        appNameWords.push(randomWord);
+                    }
+                }
+            }
+            
+            // Capitalize first letter of each word and join
+            return appNameWords.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('');
+        }
+
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('privateAuthSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                document.getElementById('settingsVersion').value = settings.version || '1.0';
+                document.getElementById('settingsApiUrl').value = settings.apiUrl || 'https://api-s736.onrender.com/api';
+                
+                // Update API credentials section
+                document.getElementById('appName').value = settings.appName || 'EXM';
+                document.getElementById('ownerId').value = settings.ownerId || 'X3lapZ9vPT';
+                document.getElementById('version').value = settings.version || '1.0';
+                document.getElementById('apiUrl').value = settings.apiUrl || 'https://api-s736.onrender.com/api';
+            } else {
+                // Generate app name from user's email
+                const user = auth.currentUser;
+                let generatedAppName = 'EXM';
+                
+                if (user && user.email) {
+                    generatedAppName = generateAppNameFromEmail(user.email);
+                    console.log('Generated app name from email:', generatedAppName);
+                }
+                
+                // Set defaults for first-time users
+                document.getElementById('settingsVersion').value = '1.0';
+                document.getElementById('settingsApiUrl').value = 'https://api-s736.onrender.com/api';
+                
+                // Update API credentials section with generated values
+                document.getElementById('appName').value = generatedAppName;
+                document.getElementById('ownerId').value = 'X3lapZ9vPT';
+                document.getElementById('version').value = '1.0';
+                document.getElementById('apiUrl').value = 'https://api-s736.onrender.com/api';
+                
+                // Save the generated settings
+                const settings = {
+                    appName: generatedAppName,
+                    ownerId: 'X3lapZ9vPT',
+                    version: '1.0',
+                    apiUrl: 'https://api-s736.onrender.com/api'
+                };
+                localStorage.setItem('privateAuthSettings', JSON.stringify(settings));
+            }
+            
+            updateCodePreview();
+        }
+
+        // Settings form submission
+        document.getElementById('settingsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveSettings();
+        });
+
+        // Update code preview when settings change
+        document.getElementById('settingsVersion').addEventListener('input', updateCodePreview);
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLicenses();
+            loadUsers();
+        });
+    </script>
+</body>
+</html>
